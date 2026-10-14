@@ -1,0 +1,126 @@
+<form (submit)="$event.preventDefault(); onSubmit()" class="space-y-6">
+  <app-tabs
+    [value]="method()"
+    (valueChange)="onMethodChange($any($event))"
+    ariaLabel="Método de pagamento"
+  >
+    <ng-template appTabPanel="credit_card" appTabPanelLabel="Cartão">
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label appLabel for="cardNumber">Número do cartão</label>
+          <input
+            appInput
+            id="cardNumber"
+            inputmode="numeric"
+            autocomplete="cc-number"
+            placeholder="0000 0000 0000 0000"
+            [value]="cardNumber()"
+            (input)="cardNumber.set($any($event.target).value)"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label appLabel for="cardHolderName">Nome impresso no cartão</label>
+          <input
+            appInput
+            id="cardHolderName"
+            autocomplete="cc-name"
+            [value]="cardHolderName()"
+            (input)="cardHolderName.set($any($event.target).value)"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label appLabel for="cardExpiry">Validade</label>
+            <input
+              appInput
+              id="cardExpiry"
+              placeholder="MM/AA"
+              autocomplete="cc-exp"
+              [value]="cardExpiry()"
+              (input)="cardExpiry.set($any($event.target).value)"
+            />
+          </div>
+          <div class="space-y-2">
+            <label appLabel for="cardCvv">CVV</label>
+            <input
+              appInput
+              id="cardCvv"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              [value]="cardCvv()"
+              (input)="cardCvv.set($any($event.target).value)"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label appLabel for="installments">Parcelamento</label>
+          <app-select
+            inputId="installments"
+            [value]="installments().toString()"
+            (valueChange)="installments.set(+$event)"
+            [options]="installmentOptions()"
+          />
+        </div>
+
+        <button
+          appButton
+          type="submit"
+          class="w-full"
+          [disabled]="!canSubmitCard() || isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Processando...' : 'Pagar ' + formatCurrency(totalAmount()) }}
+        </button>
+      </div>
+    </ng-template>
+
+    <ng-template appTabPanel="pix" appTabPanelLabel="Pix">
+      <div class="space-y-4">
+        <div
+          class="flex flex-col items-center gap-3 rounded-lg border border-dashed p-6 text-center"
+        >
+          <lucide-icon
+            [img]="QrCodeIcon"
+            class="h-16 w-16 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <p class="text-sm text-muted-foreground">
+            Escaneie o QR code com o app do seu banco para pagar
+            {{ formatCurrency(totalAmount()) }}.
+          </p>
+        </div>
+        <button appButton type="submit" class="w-full" [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Confirmando...' : 'Já paguei' }}
+        </button>
+      </div>
+    </ng-template>
+
+    <ng-template appTabPanel="miles" appTabPanelLabel="Milhas">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between rounded-lg border p-4 text-sm">
+          <span class="flex items-center gap-2 text-muted-foreground">
+            <lucide-icon [img]="SparklesIcon" class="h-4 w-4" aria-hidden="true" />
+            Saldo disponível
+          </span>
+          <span class="font-medium">{{ formatMiles(milesBalance) }} milhas</span>
+        </div>
+        @if (!canPayWithMiles()) {
+          <p class="text-sm text-destructive">
+            Saldo insuficiente para esta compra ({{ formatMiles(milesNeeded()) }} milhas
+            necessárias).
+          </p>
+        }
+        <button
+          appButton
+          type="submit"
+          class="w-full"
+          [disabled]="!canPayWithMiles() || isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Confirmando...' : 'Pagar com milhas' }}
+        </button>
+      </div>
+    </ng-template>
+  </app-tabs>
+</form>

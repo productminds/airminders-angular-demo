@@ -1,0 +1,100 @@
+<form (submit)="$event.preventDefault(); onSubmit()" (focusin)="interact.emit()" class="space-y-6">
+  <app-radio-group
+    name="trip"
+    [(value)]="tripType"
+    [options]="tripTypeOptions"
+    ariaLabel="Tipo de viagem"
+  />
+
+  <div class="grid grid-cols-1 items-end gap-4 sm:grid-cols-[1fr_auto_1fr]">
+    <div class="space-y-2">
+      <label appLabel for="origin">Origem</label>
+      <app-select inputId="origin" [(value)]="originIata" [options]="airportOptions" />
+    </div>
+
+    <button
+      appButton
+      type="button"
+      variant="outline"
+      size="icon"
+      (click)="swapAirports()"
+      aria-label="Trocar origem e destino"
+      class="mb-0.5 justify-self-center"
+    >
+      <lucide-icon [img]="ArrowLeftRightIcon" class="h-4 w-4" aria-hidden="true" />
+    </button>
+
+    <div class="space-y-2">
+      <label appLabel for="destination">Destino</label>
+      <app-select
+        inputId="destination"
+        [(value)]="destinationIata"
+        [options]="airportOptions"
+        [invalid]="!!errors()['destinationIata']"
+      />
+      @if (errors()['destinationIata']) {
+        <p class="text-sm text-destructive">{{ errors()['destinationIata'] }}</p>
+      }
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <label appLabel for="departureDate">Data de ida</label>
+      <input
+        appInput
+        id="departureDate"
+        type="date"
+        [min]="today"
+        [value]="departureDate()"
+        (input)="departureDate.set($any($event.target).value)"
+        [attr.aria-invalid]="!!errors()['departureDate'] || null"
+      />
+      @if (errors()['departureDate']) {
+        <p class="text-sm text-destructive">{{ errors()['departureDate'] }}</p>
+      }
+    </div>
+
+    @if (isRoundTrip()) {
+      <div class="space-y-2">
+        <label appLabel for="returnDate">Data de volta</label>
+        <input
+          appInput
+          id="returnDate"
+          type="date"
+          [min]="departureDate() || today"
+          [value]="returnDate()"
+          (input)="returnDate.set($any($event.target).value)"
+          [attr.aria-invalid]="!!errors()['returnDate'] || null"
+        />
+        @if (errors()['returnDate']) {
+          <p class="text-sm text-destructive">{{ errors()['returnDate'] }}</p>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <label appLabel for="passengers">Passageiros</label>
+      <input
+        appInput
+        id="passengers"
+        type="number"
+        min="1"
+        max="9"
+        [value]="passengerAdultCount()"
+        (input)="passengerAdultCount.set($any($event.target).valueAsNumber)"
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel for="cabinClass">Classe</label>
+      <app-select inputId="cabinClass" [(value)]="cabinClass" [options]="cabinClassOptions" />
+    </div>
+  </div>
+
+  <button appButton type="submit" class="w-full sm:w-auto" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Buscando...' : 'Buscar voos' }}
+  </button>
+</form>

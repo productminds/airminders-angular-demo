@@ -1,0 +1,29 @@
+<div class="mx-auto max-w-3xl space-y-6">
+  <div appCard>
+    <div appCardContent class="flex flex-col items-center gap-3 p-6 text-center sm:p-8">
+      <lucide-icon [img]="CheckCircle2Icon" class="h-12 w-12 text-success" aria-hidden="true" />
+      <div>
+        <h1 class="text-2xl font-semibold sm:text-3xl">Reserva confirmada!</h1>
+        <p class="mt-1 text-muted-foreground">Seu localizador de reserva é</p>
+      </div>
+      <p class="text-4xl font-bold tracking-[0.3em] text-primary">{{ order()!.pnr }}</p>
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <app-itinerary-leg-summary
+      title="Ida"
+      [offer]="outboundOffer()!"
+      [fareFamily]="outboundFare()!"
+    />
+    @if (inboundOffer(); as inbound) {
+      <app-itinerary-leg-summary title="Volta" [offer]="inbound" [fareFamily]="inboundFare()!" />
+    }
+  </div>
+
+  <app-passenger-list-summary [passengers]="passengers()!" />
+
+  <div class="flex justify-end border-t pt-6">
+    <button appButton (click)="onNewSearch()">Nova busca</button>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<fieldset class="space-y-4 rounded-lg border bg-card p-4 sm:p-6">
+  <legend class="px-1 text-base font-medium">Passageiro {{ index() + 1 }}</legend>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('firstName')">Nome</label>
+      <input
+        appInput
+        [id]="idFor('firstName')"
+        [value]="passenger().firstName"
+        (input)="updateField('firstName', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('firstName') || null"
+      />
+      @if (errorFor('firstName')) {
+        <p class="text-sm text-destructive">{{ errorFor('firstName') }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('lastName')">Sobrenome</label>
+      <input
+        appInput
+        [id]="idFor('lastName')"
+        [value]="passenger().lastName"
+        (input)="updateField('lastName', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('lastName') || null"
+      />
+      @if (errorFor('lastName')) {
+        <p class="text-sm text-destructive">{{ errorFor('lastName') }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('birthDate')">Data de nascimento</label>
+      <input
+        appInput
+        [id]="idFor('birthDate')"
+        type="date"
+        [value]="passenger().birthDate"
+        (input)="updateField('birthDate', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('birthDate') || null"
+      />
+      @if (errorFor('birthDate')) {
+        <p class="text-sm text-destructive">{{ errorFor('birthDate') }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('documentNumber')">Documento (CPF/Passaporte)</label>
+      <input
+        appInput
+        [id]="idFor('documentNumber')"
+        [value]="passenger().documentNumber"
+        (input)="updateField('documentNumber', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('documentNumber') || null"
+      />
+      @if (errorFor('documentNumber')) {
+        <p class="text-sm text-destructive">{{ errorFor('documentNumber') }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('email')">E-mail</label>
+      <input
+        appInput
+        [id]="idFor('email')"
+        type="email"
+        [value]="passenger().email"
+        (input)="updateField('email', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('email') || null"
+      />
+      @if (errorFor('email')) {
+        <p class="text-sm text-destructive">{{ errorFor('email') }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label appLabel [for]="idFor('phone')">Telefone</label>
+      <input
+        appInput
+        [id]="idFor('phone')"
+        type="tel"
+        [value]="passenger().phone"
+        (input)="updateField('phone', $any($event.target).value)"
+        [attr.aria-invalid]="!!errorFor('phone') || null"
+      />
+      @if (errorFor('phone')) {
+        <p class="text-sm text-destructive">{{ errorFor('phone') }}</p>
+      }
+    </div>
+  </div>
+</fieldset>

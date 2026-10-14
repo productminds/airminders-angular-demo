@@ -1,0 +1,31 @@
+<form (submit)="$event.preventDefault(); onSubmit()" class="mx-auto max-w-3xl space-y-6">
+  <div class="space-y-1">
+    <h1 class="text-2xl font-semibold sm:text-3xl">Dados dos passageiros</h1>
+    <p class="text-muted-foreground">Preencha os dados exatamente como no documento de viagem.</p>
+  </div>
+
+  @if (status() === 'error') {
+    <div appAlert variant="destructive">
+      <lucide-icon [img]="AlertTriangleIcon" class="h-4 w-4" aria-hidden="true" />
+      <h2 appAlertTitle>Não foi possível validar os dados</h2>
+      <div appAlertDescription>Revise os campos destacados e tente novamente.</div>
+    </div>
+  }
+
+  <div class="space-y-4">
+    @for (passenger of passengerList(); track passenger.passengerId; let index = $index) {
+      <app-passenger-form
+        [index]="index"
+        [passenger]="passenger"
+        [errors]="errorsForPassenger(passenger.passengerId)"
+        (fieldChange)="updatePassenger(index, $event)"
+      />
+    }
+  </div>
+
+  <div class="flex justify-end border-t pt-6">
+    <button appButton type="submit" [disabled]="status() === 'loading'">
+      {{ status() === 'loading' ? 'Validando...' : 'Continuar' }}
+    </button>
+  </div>
+</form>

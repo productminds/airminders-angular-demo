@@ -1,0 +1,38 @@
+<header class="border-b pb-4">
+  <a
+    href="/"
+    (click)="$event.preventDefault(); logoClick.emit()"
+    class="text-lg font-bold tracking-tight text-foreground"
+  >
+    Air<span class="text-primary">Minders</span>
+  </a>
+
+  <ol class="mt-4 flex items-center gap-2 overflow-x-auto sm:gap-3">
+    @for (step of steps; track step.path; let index = $index, isLast = $last) {
+      <li class="flex shrink-0 items-center gap-2">
+        <span
+          class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium"
+          [class.bg-primary]="index === currentIndex()"
+          [class.text-primary-foreground]="index === currentIndex()"
+          [class.bg-secondary]="index < currentIndex()"
+          [class.text-secondary-foreground]="index < currentIndex()"
+          [class.bg-muted]="index > currentIndex()"
+          [class.text-muted-foreground]="index > currentIndex()"
+        >
+          {{ index + 1 }}
+        </span>
+        <span
+          class="hidden text-sm sm:inline"
+          [class.font-medium]="index === currentIndex()"
+          [class.text-foreground]="index === currentIndex()"
+          [class.text-muted-foreground]="index !== currentIndex()"
+        >
+          {{ step.label }}
+        </span>
+        @if (!isLast) {
+          <span class="h-px w-4 shrink-0 bg-border sm:w-8" aria-hidden="true"></span>
+        }
+      </li>
+    }
+  </ol>
+</header>
